@@ -4,9 +4,11 @@ import java.util.List;
 
 import javax.mail.Session;
 
+import com.markliu.emailutil.entities.EmailAccount;
 import com.markliu.emailutil.entities.EmailInfo;
 import com.markliu.emailutil.entities.EmailServerInfo;
 import com.markliu.emailutil.service.EmailServerService;
+import com.markliu.emailutil.service.UserService;
 
 /**
  * 
@@ -18,6 +20,7 @@ public class EmailTemplateUtil {
 
 	private static EmailServerService emailServerService = new EmailServerService();
 	
+	private static UserService userService=new UserService();
 	/**
 	 * 获取配置的邮箱服务器的信息
 	 * @return
@@ -129,5 +132,9 @@ public class EmailTemplateUtil {
 	 */
 	public static boolean deleteEmailByMsgNum(EmailServerInfo emailServerInfo, int msgnum) {
 		return emailServerService.deleteEmailByMsgNum(emailServerInfo, msgnum);
+	}
+	
+	public static List<EmailAccount> loadUser(){
+		return userService.getEmailAccount();
 	}
 }

@@ -48,7 +48,7 @@ public class EmailServerService {
 		InputStream inStream = null;
 		try {
 			// 获取类路径(/)下的配置文件
-			inStream = getClass().getResourceAsStream("/emailServerConfig.properties");
+			inStream = getClass().getResourceAsStream("/mailServerConfig.properties");
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.out.println("配置文件加载失败");
