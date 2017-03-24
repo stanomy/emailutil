@@ -124,6 +124,20 @@ public class EmailTemplateUtil {
 		}
 	}
 	
+	public static List<EmailInfo> getEmailBySubjectPrefix(EmailServerInfo emailServerInfo){
+	// 如果登陆成功，则进行发送邮件
+		
+		Session sendMailSession = emailServerService.loginEmailServer(emailServerInfo, true);
+		if (sendMailSession != null) {
+			System.out.println(emailServerInfo.getMailServerPOP3Host() + " 登陆成功！");
+			System.out.println("正在读取邮件...");
+			List<EmailInfo> emailInfos = emailServerService.getEmailBySubjectPrefix(sendMailSession, emailServerInfo);
+			return emailInfos;
+		} else {
+			System.out.println(emailServerInfo.getMailServerPOP3Host() + " 登陆失败！");
+			return null;
+		}
+	}
 	/**
 	 * 删除收件箱中第 msgnum 份邮件，本地数据库中需要保存读取邮件的 msgnum 序号！
 	 * @param emailServerInfo

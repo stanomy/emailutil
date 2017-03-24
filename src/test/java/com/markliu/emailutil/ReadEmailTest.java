@@ -39,4 +39,17 @@ public class ReadEmailTest {
 		EmailInfo emailInfo = EmailTemplateUtil.getLatestOneEmailInfo(emailServerInfo);
 		System.out.println(emailInfo.toString());
 	}
+	
+	@Test
+	public void testReadEmailBySubjectTemplate() throws FileNotFoundException {
+		
+		// 获取配置的登陆邮件服务器的信息
+		EmailServerInfo emailServerInfo = EmailTemplateUtil.getConfigEmailServerInfo();
+		
+		List<EmailInfo> emailInfos = EmailTemplateUtil.getEmailBySubjectPrefix(emailServerInfo);
+		System.out.println("邮件数目：" + emailInfos.size());
+		for (EmailInfo emailInfo : emailInfos) {
+			System.out.println(emailInfo.toString());
+		};
+	}
 }
