@@ -62,6 +62,8 @@ public class EmailServerService {
 			String userName = properties.getProperty("userName");
 			String password = properties.getProperty("password");
 			String validate = properties.getProperty("validate");
+			String downloadPath=properties.getProperty("downloadPath");
+			String mailSubjectPrefix=properties.getProperty("mailSubjectPrefix");
 			
 			EmailServerInfo emailServerInfo = new EmailServerInfo();
 			
@@ -83,6 +85,12 @@ public class EmailServerService {
 			if (validate != null && !("".equals(validate.trim()))) {
 				boolean isValidate = "true".equals(validate.trim()) ? true : false;
 				emailServerInfo.setValidate(isValidate);
+			}
+			if (downloadPath != null && !("".equals(downloadPath.trim()))) {
+				emailServerInfo.setDownloadPath(downloadPath.trim());
+			}
+			if (mailSubjectPrefix != null && !("".equals(validate.trim()))) {
+				emailServerInfo.setMailSubjectPrefix(mailSubjectPrefix.trim());
 			}
 			
 			System.out.println("--------邮件服务器配置信息--------");
@@ -457,7 +465,7 @@ public class EmailServerService {
             store = sendMailSession.getStore("pop3");
             store.connect(emailServerInfo.getUserName(), emailServerInfo.getPassword());
  
-            FetchingEmailUtil fetchingEmailUtil = new FetchingEmailUtil();
+            FetchingEmailUtil fetchingEmailUtil = new FetchingEmailUtil(emailServerInfo.getDownloadPath());
             
             emailInfo = fetchingEmailUtil.fetchingLatestEmailFromStore(store, true);
             
@@ -491,7 +499,7 @@ public class EmailServerService {
             store = sendMailSession.getStore("pop3");
             store.connect(emailServerInfo.getUserName(), emailServerInfo.getPassword());
  
-            FetchingEmailUtil fetchingEmailUtil = new FetchingEmailUtil();
+            FetchingEmailUtil fetchingEmailUtil = new FetchingEmailUtil(emailServerInfo.getDownloadPath());
             
             allEmailInfos = fetchingEmailUtil.fetchingAllEmailInfos(store, true);
             

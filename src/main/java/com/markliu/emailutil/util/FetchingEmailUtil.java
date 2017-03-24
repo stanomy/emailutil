@@ -9,6 +9,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import javax.mail.Address;
 import javax.mail.Folder;
@@ -30,9 +31,16 @@ import com.markliu.emailutil.entities.EmailInfo;
  */
 public class FetchingEmailUtil {
 	
-	private final static String SAVE_ATTACHMENTS_PATH = "E:\\email_attachments\\temp\\";
+	private  String SAVE_ATTACHMENTS_PATH = null;
 	
 	
+	public FetchingEmailUtil(String sAVE_ATTACHMENTS_PATH) {
+		super();
+		SAVE_ATTACHMENTS_PATH = sAVE_ATTACHMENTS_PATH;
+	}
+
+
+
 	public List<EmailInfo> fetchingAllEmailInfos(Store store, boolean closeFolder) throws Exception {
 		List<EmailInfo> emailInfos = new ArrayList<EmailInfo>();
 		
@@ -119,7 +127,7 @@ public class FetchingEmailUtil {
 			
 		} else if (p.getContentType().contains("image/")) {
 			System.out.println("content type" + p.getContentType());
-			File f = new File("E:\\email_attachments\\temp\\image" + new Date().getTime() + ".jpg");
+			File f = new File(SAVE_ATTACHMENTS_PATH+"image" + new Date().getTime() + ".jpg");
 			DataOutputStream output = new DataOutputStream(
 					new BufferedOutputStream(new FileOutputStream(f)));
 			com.sun.mail.util.BASE64DecoderStream test = (com.sun.mail.util.BASE64DecoderStream) p

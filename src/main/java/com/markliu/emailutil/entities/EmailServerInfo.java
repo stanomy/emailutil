@@ -1,6 +1,5 @@
 package com.markliu.emailutil.entities;
 
-
 /**
  * 登陆的邮箱服务器的信息，包括服务器的 host 和 ip，用户名和密码等
  * 
@@ -34,6 +33,15 @@ public class EmailServerInfo {
 	 * 是否支持ssl链接
 	 */
 	private boolean ssl = true;
+
+	/**
+	 * 附件下载路径
+	 */
+	private String downloadPath;
+	/**
+	 * 邮件前缀
+	 */
+	private String mailSubjectPrefix;
 
 	public String getMailServerPOP3Host() {
 		return mailServerPOP3Host;
@@ -89,6 +97,22 @@ public class EmailServerInfo {
 
 	public void setSsl(boolean ssl) {
 		this.ssl = ssl;
+	}
+
+	public String getDownloadPath() {
+		return downloadPath;
+	}
+
+	public void setDownloadPath(String downloadPath) {
+		this.downloadPath = downloadPath;
+	}
+
+	public String getMailSubjectPrefix() {
+		return mailSubjectPrefix;
+	}
+
+	public void setMailSubjectPrefix(String mailSubjectPrefix) {
+		this.mailSubjectPrefix = mailSubjectPrefix;
 	}
 
 }
