@@ -50,6 +50,15 @@ public class FetchingEmailUtil {
 		return this.fetchingAllEmailInfos(store, closeFolder, true);
 	}
 
+	/**
+	 * 根据邮件标题前缀从所有邮件获取，获取成功后从收件箱删除
+	 * 
+	 * @param store
+	 * @param closeFolder
+	 * @param usePrefix
+	 * @return
+	 * @throws Exception
+	 */
 	private List<EmailInfo> fetchingAllEmailInfos(Store store,
 			boolean closeFolder, boolean usePrefix) throws Exception {
 		List<EmailInfo> emailInfos = new ArrayList<EmailInfo>();
