@@ -1,11 +1,8 @@
 package com.markliu.emailutil.service;
 
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
-
 import com.markliu.emailutil.entities.EmailAccount;
 
 /**
@@ -26,19 +23,14 @@ public class UserService {
 
 		List<EmailAccount> rs = new ArrayList<EmailAccount>(0);
 
-		Properties properties = new Properties();
-		InputStreamReader inStream = null;
+		Properties properties = PropertyConfig.getInstance()
+				.getConfig("../../../../account.properties",
+						"/account.properties", "账号信息");
 		try {
-			// 获取类路径(/)下的配置文件
-			inStream = new InputStreamReader(getClass().getResourceAsStream(
-					"/account.properties"),"UTF-8");
-		} catch (Exception e) {
-			System.err.println("用户邮箱账号加载失败!");
-			return null;
-		}
-		try {
-			properties.load(inStream);
 
+			if (null == properties) {
+				return rs;
+			}
 			String str = null;
 
 			/**

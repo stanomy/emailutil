@@ -115,4 +115,14 @@ public class EmailServerInfo {
 		this.mailSubjectPrefix = mailSubjectPrefix;
 	}
 
+	@Override
+	public String toString() {
+		return super.toString() + "{\nmailServerPOP3Host=" + mailServerPOP3Host
+				+ "\nmailServerSMTPHost=" + mailServerSMTPHost
+				+ "\nmyEmailAddress=" + myEmailAddress + "\nuserName="
+				+ userName + "\nvalidate=" + validate + "\nssl=" + ssl
+				+ "\ndownloadPath=" + downloadPath + "\nmailSubjectPrefix="
+				+ mailSubjectPrefix + "\n}";
+	}
+
 }

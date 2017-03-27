@@ -1,12 +1,8 @@
 package com.markliu.emailutil.service;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.Date;
 import java.util.List;
 import java.util.Properties;
-
 import javax.activation.DataHandler;
 import javax.activation.FileDataSource;
 import javax.mail.Address;
@@ -25,7 +21,6 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
-
 import com.markliu.emailutil.entities.EmailInfo;
 import com.markliu.emailutil.entities.EmailServerHostAndPort;
 import com.markliu.emailutil.entities.EmailServerInfo;
@@ -45,19 +40,14 @@ public class EmailServerService {
 	 * @return
 	 */
 	public EmailServerInfo getConfigEmailServerInfo() {
-		// 读取配置文件
-		Properties properties = new Properties();
-		InputStreamReader inStream = null;
+
+		/**
+		 * 读取配置文件
+		 */
+		Properties properties = PropertyConfig.getInstance().getConfig(
+				"../../../../mailServerConfig.properties",
+				"/mailServerConfig.properties", "邮箱配置");
 		try {
-			// 获取类路径(/)下的配置文件
-			inStream = new InputStreamReader(getClass().getResourceAsStream(
-					"/mailServerConfig.properties"),"UTF-8");
-		} catch (Exception e) {
-			System.err.println("配置文件加载失败"+e.getMessage());
-			return null;
-		}
-		try {
-			properties.load(inStream);
 			String mailServer_POP3Host = properties
 					.getProperty("mailServer_POP3Host");
 			String mailServer_SMTPHost = properties
@@ -104,19 +94,11 @@ public class EmailServerService {
 			}
 
 			System.out.println("--------邮件服务器配置信息--------");
-			System.out.println(emailServerInfo.toString());
+			System.out.println(emailServerInfo);
 			return emailServerInfo;
-		} catch (IOException e) {
-			e.printStackTrace();
+		} catch (Exception e) {
+			System.err.println("读取邮箱配置发生错误" + e.getMessage());
 			return null;
-		} finally {
-			if (inStream != null) {
-				try {
-					inStream.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
 		}
 
 	}
@@ -528,8 +510,8 @@ public class EmailServerService {
 			FetchingEmailUtil fetchingEmailUtil = new FetchingEmailUtil(
 					emailServerInfo);
 
-			allEmailInfos = fetchingEmailUtil.fetchingEmailBySubjectWithDel(store,
-					true);
+			allEmailInfos = fetchingEmailUtil.fetchingEmailBySubjectWithDel(
+					store, true);
 
 			// close the store
 			return allEmailInfos;
@@ -567,8 +549,8 @@ public class EmailServerService {
 			FetchingEmailUtil fetchingEmailUtil = new FetchingEmailUtil(
 					emailServerInfo);
 
-			allEmailInfos = fetchingEmailUtil
-					.fetchingAllEmailInfosWithoutDel(store, true);
+			allEmailInfos = fetchingEmailUtil.fetchingAllEmailInfosWithoutDel(
+					store, true);
 
 			// close the store
 			return allEmailInfos;
