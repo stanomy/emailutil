@@ -206,8 +206,7 @@ public class FetchingEmailUtil {
 
 					String downloadPath = this.serverInfo.getDownloadPath()
 							+ "\\" + this.serverInfo.getUserName() + "\\";
-					// 判断下载文件夹是否存在
-					this.createUserDownloadFolder(downloadPath);
+					
 					// 下载附件
 					attachmentFiles.add(downloadPath + attachmentFileName);
 
@@ -227,20 +226,7 @@ public class FetchingEmailUtil {
 
 	}
 
-	/**
-	 * 判断用户下载文件夹是否存在，不存在则创建
-	 * <p>
-	 * eg:用户下载文件夹格式: xxx@xxx.com,即邮箱地址
-	 * 
-	 * @param serverInfo
-	 */
-	private void createUserDownloadFolder(String downLoadPath) {
-		File file = new File(downLoadPath);
-		// 如果文件不存在且不是目录，则创建
-		if (!file.exists() && !file.isDirectory()) {
-			file.mkdir();
-		}
-	}
+	
 
 	/*
 	 * This method would print FROM,TO and SUBJECT of the message
@@ -373,10 +359,27 @@ public class FetchingEmailUtil {
 			this.path = path;
 		}
 
+		/**
+		 * 判断用户下载文件夹是否存在，不存在则创建
+		 * <p>
+		 * eg:用户下载文件夹格式: xxx@xxx.com,即邮箱地址
+		 * 
+		 * @param serverInfo
+		 */
+		private void createUserDownloadFolder(String downLoadPath) {
+			File file = new File(downLoadPath);
+			// 如果文件不存在且不是目录，则创建
+			if (!file.exists() && !file.isDirectory()) {
+				file.mkdir();
+			}
+		}
+		
 		@Override
 		public void run() {
 			FileOutputStream out = null;
 			try {
+				// 判断下载文件夹是否存在
+				this.createUserDownloadFolder(path);
 				out = new FileOutputStream(path + filename);
 				byte[] buffer = new byte[1024];
 				int len = 0;
