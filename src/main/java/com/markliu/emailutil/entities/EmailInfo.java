@@ -73,6 +73,11 @@ public class EmailInfo {
 	 */
 	private String messageID;
 
+	/**
+	 * 邮件数组下标，用于删除
+	 */
+	private int msgNum;
+
 	public String[] getToAddress() {
 		return toAddress;
 	}
@@ -169,6 +174,14 @@ public class EmailInfo {
 		this.containsAttachments = containsAttachments;
 	}
 
+	public int getMsgNum() {
+		return msgNum;
+	}
+
+	public void setMsgNum(int msgNum) {
+		this.msgNum = msgNum;
+	}
+
 	@Override
 	public String toString() {
 		return super.toString() + "\n[ReadEmailInfo {\n\tfromAddress="
@@ -176,8 +189,9 @@ public class EmailInfo {
 				+ ", \n\tneedReply=" + needReply + ", \n\tisReaded=" + isReaded
 				+ ", \n\tcontainsAttachments=" + containsAttachments
 				+ ", \n\tcarbonCopy=" + Arrays.toString(carbonCopy)
-				+ ", \n\tdarkCopy=" + Arrays.toString(darkCopy)
-				+ ", \n\tmessageID=" + messageID + "\n]}";
+				+ ", \n\tdarkCopy=" + Arrays.toString(darkCopy) + "\n\tsubject"
+				+ subject + ", \n\tmessageID=" + messageID + ", \n\tmsgNum="
+				+ msgNum + "\n]}";
 	}
 
 }

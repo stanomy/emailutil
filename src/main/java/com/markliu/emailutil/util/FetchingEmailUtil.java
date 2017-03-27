@@ -8,9 +8,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.mail.Address;
+import javax.mail.Flags;
 import javax.mail.Folder;
 import javax.mail.Message;
 import javax.mail.Multipart;
@@ -54,7 +56,7 @@ public class FetchingEmailUtil {
 
 		// create the folder object and open it
 		Folder emailFolder = store.getFolder("INBOX");
-		emailFolder.open(Folder.READ_ONLY);
+		emailFolder.open(Folder.READ_WRITE);// 打开某个收件箱
 
 		// retrieve all messages from the folder in an array
 		Message[] messages = emailFolder.getMessages();
@@ -64,17 +66,24 @@ public class FetchingEmailUtil {
 				if (null != this.serverInfo
 						&& null != this.serverInfo.getMailSubjectPrefix()
 						&& message.getSubject().indexOf(
-								this.serverInfo.getMailSubjectPrefix()) > 0) {
+								this.serverInfo.getMailSubjectPrefix()) >= 0) {
 					writePart(message, emailInfo);
+					//读取后删除邮件
+					message.setFlag(Flags.Flag.DELETED, true);
 					emailInfos.add(emailInfo);
+				}else{
+					
 				}
 			} else {
 				writePart(message, emailInfo);
+				//读取后删除邮件
+				message.setFlag(Flags.Flag.DELETED, true);
 				emailInfos.add(emailInfo);
 			}
 		}
 		if (closeFolder) {
-			emailFolder.close(false);
+			//修改为true才会触发删除
+			emailFolder.close(true);
 		}
 		return emailInfos;
 	}
@@ -96,7 +105,7 @@ public class FetchingEmailUtil {
 		// retrieve the latest messages from the folder in an array
 		Message message = emailFolder.getMessage(emailFolder.getMessageCount());
 		writePart(message, emailInfo);
-
+		
 		if (closeFolder) {
 			emailFolder.close(false);
 		}
@@ -111,7 +120,6 @@ public class FetchingEmailUtil {
 		if (p instanceof Message)
 			// Call methos writeEnvelope
 			writeEnvelope((Message) p, emailInfo);
-
 		System.out.println("-------------Body---------------");
 		System.out.println("CONTENT-TYPE: " + p.getContentType());
 
@@ -216,6 +224,8 @@ public class FetchingEmailUtil {
 
 		// 设置发送时间
 		emailInfo.setSentDate(m.getSentDate());
+		//设置文件夹数组下标
+		emailInfo.setMsgNum(m.getMessageNumber());
 		// FROM
 		if ((a = m.getFrom()) != null) {
 			// 注意需要 decode
@@ -284,20 +294,22 @@ public class FetchingEmailUtil {
 					+ MimeUtility.decodeText(m.getSubject()));
 			emailInfo.setSubject(MimeUtility.decodeText(m.getSubject()));
 		}
-
 		// 判断邮件是否已读
-		// boolean isNew = false;
-		// Flags flags = m.getFlags();
-		// Flags.Flag[] flag = flags.getSystemFlags();
-		// System.out.println("flags的长度:　" + flag.length);
-		// for (int i = 0; i < flag.length; i++) {
-		// if (flag[i] == Flags.Flag.SEEN) {
-		// isNew = true;
-		// System.out.println("seen email...");
-		// // break;
-		// }
-		// }
-		// emailInfo.setReaded(isNew);
+		/**
+		 * pop3不能识别已读未读，所以注释掉
+		 */
+//		boolean isNew = false;
+//		Flags flags = m.getFlags();
+//		Flags.Flag[] flag = flags.getSystemFlags();
+//		System.out.println("flags的长度:　" + flag.length);
+//		for (int i = 0; i < flag.length; i++) {
+//			if (flag[i] == Flags.Flag.SEEN) {
+//				isNew = true;
+//				System.out.println("seen email...");
+//				// break;
+//			}
+//		}
+//		emailInfo.setReaded(isNew);
 		/*
 		 * This message is seen. This flag is implicitly set by the
 		 * implementation when the this Message's content is returned to the
