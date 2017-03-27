@@ -8,7 +8,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 
 import javax.mail.Address;
@@ -42,12 +41,12 @@ public class FetchingEmailUtil {
 
 	public List<EmailInfo> fetchingAllEmailInfosWithoutDel(Store store,
 			boolean closeFolder) throws Exception {
-		return this.fetchingAllEmailInfos(store, closeFolder, false,false);
+		return this.fetchingAllEmailInfos(store, closeFolder, false, false);
 	}
 
 	public List<EmailInfo> fetchingEmailBySubjectWithDel(Store store,
 			boolean closeFolder) throws Exception {
-		return this.fetchingAllEmailInfos(store, closeFolder, true,true);
+		return this.fetchingAllEmailInfos(store, closeFolder, true, true);
 	}
 
 	/**
@@ -56,11 +55,14 @@ public class FetchingEmailUtil {
 	 * @param store
 	 * @param closeFolder
 	 * @param usePrefix
+	 * @param isDel
+	 *            是否删除邮件
 	 * @return
 	 * @throws Exception
 	 */
 	private List<EmailInfo> fetchingAllEmailInfos(Store store,
-			boolean closeFolder, boolean usePrefix,boolean isDel) throws Exception {
+			boolean closeFolder, boolean usePrefix, boolean isDel)
+			throws Exception {
 		List<EmailInfo> emailInfos = new ArrayList<EmailInfo>();
 
 		// create the folder object and open it
@@ -78,13 +80,17 @@ public class FetchingEmailUtil {
 								this.serverInfo.getMailSubjectPrefix()) >= 0) {
 					writePart(message, emailInfo);
 					// 读取后删除邮件
-					if(isDel)message.setFlag(Flags.Flag.DELETED, true);
+					if (isDel) {
+						message.setFlag(Flags.Flag.DELETED, true);
+					}
 					emailInfos.add(emailInfo);
 				}
 			} else {
 				writePart(message, emailInfo);
 				// 读取后删除邮件
-				if(isDel)message.setFlag(Flags.Flag.DELETED, true);
+				if (isDel) {
+					message.setFlag(Flags.Flag.DELETED, true);
+				}
 				emailInfos.add(emailInfo);
 			}
 		}
@@ -185,12 +191,7 @@ public class FetchingEmailUtil {
 				emailInfo.setContent(MimeUtility.decodeText(p.getContent()
 						.toString()));
 			} else if (o instanceof InputStream) {
-				System.out
-						.println("--------------- 附件 InputStream ------------");
-				System.out
-						.println("p.getContentType():\n" + p.getContentType());
-				System.out
-						.println("-------------p.getContentType()--------------");
+				System.out.println("-------开始下载附件-------");
 
 				String attachmentFileName = p.getDataHandler().getDataSource()
 						.getName();
@@ -202,7 +203,11 @@ public class FetchingEmailUtil {
 							.getInputStream();
 					List<String> attachmentFiles = emailInfo
 							.getAttachmentFiles();
+					//判断下载文件夹是否存在
+					this.createUserDownloadFolder(this.serverInfo);
+					//下载附件
 					attachmentFiles.add(this.serverInfo.getDownloadPath()
+							+ "\\" + this.serverInfo.getUserName() + "\\"
 							+ attachmentFileName);
 
 					// 保存附件路径及名称
@@ -221,6 +226,17 @@ public class FetchingEmailUtil {
 
 	}
 
+	/**
+	 * 判断用户下载文件夹是否存在，不存在则创建
+	 * <p>
+	 * eg:用户下载文件夹格式: xxx@xxx.com,即邮箱地址
+	 * 
+	 * @param serverInfo
+	 */
+	private void createUserDownloadFolder(EmailServerInfo serverInfo) {
+
+	}
+
 	/*
 	 * This method would print FROM,TO and SUBJECT of the message
 	 */
@@ -231,8 +247,7 @@ public class FetchingEmailUtil {
 
 		// 设置发送时间
 		emailInfo.setSentDate(m.getSentDate());
-		// 设置文件夹数组下标
-		emailInfo.setMsgNum(m.getMessageNumber());
+
 		// FROM
 		if ((a = m.getFrom()) != null) {
 			// 注意需要 decode
