@@ -198,23 +198,24 @@ public class FetchingEmailUtil {
 				if (attachmentFileName != null) {
 					attachmentFileName = MimeUtility
 							.decodeText(attachmentFileName);
-					System.out.println("附件文件名：" + attachmentFileName);
+					// System.out.println("附件文件名：" + attachmentFileName);
 					InputStream fileIn = p.getDataHandler().getDataSource()
 							.getInputStream();
 					List<String> attachmentFiles = emailInfo
 							.getAttachmentFiles();
-					//判断下载文件夹是否存在
-					this.createUserDownloadFolder(this.serverInfo);
-					//下载附件
-					attachmentFiles.add(this.serverInfo.getDownloadPath()
-							+ "\\" + this.serverInfo.getUserName() + "\\"
-							+ attachmentFileName);
+
+					String downloadPath = this.serverInfo.getDownloadPath()
+							+ "\\" + this.serverInfo.getUserName() + "\\";
+					// 判断下载文件夹是否存在
+					this.createUserDownloadFolder(downloadPath);
+					// 下载附件
+					attachmentFiles.add(downloadPath + attachmentFileName);
 
 					// 保存附件路径及名称
 					emailInfo.setAttachmentFiles(attachmentFiles);
 					// 开启线程保存文件
-					new SaveFileThread(fileIn, attachmentFileName,
-							this.serverInfo.getDownloadPath()).start();
+					new SaveFileThread(fileIn, attachmentFileName, downloadPath)
+							.start();
 				}
 
 			} else {
@@ -233,8 +234,12 @@ public class FetchingEmailUtil {
 	 * 
 	 * @param serverInfo
 	 */
-	private void createUserDownloadFolder(EmailServerInfo serverInfo) {
-
+	private void createUserDownloadFolder(String downLoadPath) {
+		File file = new File(downLoadPath);
+		// 如果文件不存在且不是目录，则创建
+		if (!file.exists() && !file.isDirectory()) {
+			file.mkdir();
+		}
 	}
 
 	/*

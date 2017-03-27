@@ -76,6 +76,7 @@ public class ReadEmailTest {
 		for (EmailAccount ac : accountList) {
 			emailServerInfo.setUserName(ac.getMailAddress());
 			emailServerInfo.setPassword(ac.getMailPwd());
+			emailServerInfo.setMyEmailAddress(ac.getMailAddress());
 			List<EmailInfo> emailInfos = EmailTemplateUtil
 					.getEmailBySubjectPrefix(emailServerInfo);
 			System.out.println("邮件数目：" + emailInfos.size());
