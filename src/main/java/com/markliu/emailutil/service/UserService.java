@@ -34,12 +34,26 @@ public class UserService {
 
 			String str = properties.getProperty("user/pwd");
 
-			if (null != str && !str.isEmpty()) {
-				for (String rss : str.split(",")) {
-					/**
-					 * 解析配置，生成账户信息here
-					 */
+			if (null != str && !"".equals(str)) {
+				String[] strs=str.split(",");
+				if(null!=strs && strs.length!=0){
+					for (String rss : strs) {
+						/**
+						 * 解析配置，生成账户信息here
+						 */
+						if(null!=rss && !"".equals(rss)){
+							String[] rsses=rss.split("/");
+							if(null!=rsses && rsses.length!=0){
+								EmailAccount emailAccount=new EmailAccount();
+								emailAccount.setMailAddress(rsses[0]);
+								emailAccount.setMailPwd(rsses[1]);
+								rs.add(emailAccount);
+							}
+						}
+						
+					}
 				}
+				
 			}
 			return rs;
 		} catch (Exception e) {
