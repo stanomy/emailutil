@@ -529,7 +529,7 @@ public class EmailServerService {
 			FetchingEmailUtil fetchingEmailUtil = new FetchingEmailUtil(
 					emailServerInfo);
 
-			allEmailInfos = fetchingEmailUtil.fetchingEmailBySubject(store,
+			allEmailInfos = fetchingEmailUtil.fetchingEmailBySubjectWithDel(store,
 					true);
 
 			// close the store
@@ -569,7 +569,7 @@ public class EmailServerService {
 					emailServerInfo);
 
 			allEmailInfos = fetchingEmailUtil
-					.fetchingAllEmailInfos(store, true);
+					.fetchingAllEmailInfosWithoutDel(store, true);
 
 			// close the store
 			return allEmailInfos;

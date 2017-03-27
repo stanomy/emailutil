@@ -16,6 +16,10 @@ import com.markliu.emailutil.entities.EmailAccount;
  */
 public class UserService {
 
+	/**
+	 * 从配置文件读取账号，密码
+	 * @return
+	 */
 	public List<EmailAccount> getEmailAccount() {
 
 		List<EmailAccount> rs = new ArrayList<EmailAccount>(0);

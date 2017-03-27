@@ -40,14 +40,14 @@ public class FetchingEmailUtil {
 		this.serverInfo = serverInfo;
 	}
 
-	public List<EmailInfo> fetchingAllEmailInfos(Store store,
+	public List<EmailInfo> fetchingAllEmailInfosWithoutDel(Store store,
 			boolean closeFolder) throws Exception {
-		return this.fetchingAllEmailInfos(store, closeFolder, false);
+		return this.fetchingAllEmailInfos(store, closeFolder, false,false);
 	}
 
-	public List<EmailInfo> fetchingEmailBySubject(Store store,
+	public List<EmailInfo> fetchingEmailBySubjectWithDel(Store store,
 			boolean closeFolder) throws Exception {
-		return this.fetchingAllEmailInfos(store, closeFolder, true);
+		return this.fetchingAllEmailInfos(store, closeFolder, true,true);
 	}
 
 	/**
@@ -60,7 +60,7 @@ public class FetchingEmailUtil {
 	 * @throws Exception
 	 */
 	private List<EmailInfo> fetchingAllEmailInfos(Store store,
-			boolean closeFolder, boolean usePrefix) throws Exception {
+			boolean closeFolder, boolean usePrefix,boolean isDel) throws Exception {
 		List<EmailInfo> emailInfos = new ArrayList<EmailInfo>();
 
 		// create the folder object and open it
@@ -78,13 +78,13 @@ public class FetchingEmailUtil {
 								this.serverInfo.getMailSubjectPrefix()) >= 0) {
 					writePart(message, emailInfo);
 					// 读取后删除邮件
-					message.setFlag(Flags.Flag.DELETED, true);
+					if(isDel)message.setFlag(Flags.Flag.DELETED, true);
 					emailInfos.add(emailInfo);
 				}
 			} else {
 				writePart(message, emailInfo);
 				// 读取后删除邮件
-				message.setFlag(Flags.Flag.DELETED, true);
+				if(isDel)message.setFlag(Flags.Flag.DELETED, true);
 				emailInfos.add(emailInfo);
 			}
 		}
