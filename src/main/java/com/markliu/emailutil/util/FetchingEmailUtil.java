@@ -68,21 +68,19 @@ public class FetchingEmailUtil {
 						&& message.getSubject().indexOf(
 								this.serverInfo.getMailSubjectPrefix()) >= 0) {
 					writePart(message, emailInfo);
-					//读取后删除邮件
+					// 读取后删除邮件
 					message.setFlag(Flags.Flag.DELETED, true);
 					emailInfos.add(emailInfo);
-				}else{
-					
 				}
 			} else {
 				writePart(message, emailInfo);
-				//读取后删除邮件
+				// 读取后删除邮件
 				message.setFlag(Flags.Flag.DELETED, true);
 				emailInfos.add(emailInfo);
 			}
 		}
 		if (closeFolder) {
-			//修改为true才会触发删除
+			// 修改为true才会触发删除
 			emailFolder.close(true);
 		}
 		return emailInfos;
@@ -105,7 +103,7 @@ public class FetchingEmailUtil {
 		// retrieve the latest messages from the folder in an array
 		Message message = emailFolder.getMessage(emailFolder.getMessageCount());
 		writePart(message, emailInfo);
-		
+
 		if (closeFolder) {
 			emailFolder.close(false);
 		}
@@ -224,7 +222,7 @@ public class FetchingEmailUtil {
 
 		// 设置发送时间
 		emailInfo.setSentDate(m.getSentDate());
-		//设置文件夹数组下标
+		// 设置文件夹数组下标
 		emailInfo.setMsgNum(m.getMessageNumber());
 		// FROM
 		if ((a = m.getFrom()) != null) {
@@ -298,18 +296,18 @@ public class FetchingEmailUtil {
 		/**
 		 * pop3不能识别已读未读，所以注释掉
 		 */
-//		boolean isNew = false;
-//		Flags flags = m.getFlags();
-//		Flags.Flag[] flag = flags.getSystemFlags();
-//		System.out.println("flags的长度:　" + flag.length);
-//		for (int i = 0; i < flag.length; i++) {
-//			if (flag[i] == Flags.Flag.SEEN) {
-//				isNew = true;
-//				System.out.println("seen email...");
-//				// break;
-//			}
-//		}
-//		emailInfo.setReaded(isNew);
+		// boolean isNew = false;
+		// Flags flags = m.getFlags();
+		// Flags.Flag[] flag = flags.getSystemFlags();
+		// System.out.println("flags的长度:　" + flag.length);
+		// for (int i = 0; i < flag.length; i++) {
+		// if (flag[i] == Flags.Flag.SEEN) {
+		// isNew = true;
+		// System.out.println("seen email...");
+		// // break;
+		// }
+		// }
+		// emailInfo.setReaded(isNew);
 		/*
 		 * This message is seen. This flag is implicitly set by the
 		 * implementation when the this Message's content is returned to the
