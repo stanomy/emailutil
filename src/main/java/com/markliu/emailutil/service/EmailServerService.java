@@ -53,8 +53,7 @@ public class EmailServerService {
 			inStream = new InputStreamReader(getClass().getResourceAsStream(
 					"/mailServerConfig.properties"),"UTF-8");
 		} catch (Exception e) {
-			e.printStackTrace();
-			System.out.println("配置文件加载失败");
+			System.err.println("配置文件加载失败"+e.getMessage());
 			return null;
 		}
 		try {

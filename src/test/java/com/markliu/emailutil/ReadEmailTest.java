@@ -13,7 +13,7 @@ import com.markliu.emailutil.util.EmailTemplateUtil;
 /**
  * 
  * 
- * @auther SunnyMarkLiu
+ * @auther sy
  * @time Apr 12, 2016 10:57:13 PM
  */
 public class ReadEmailTest {

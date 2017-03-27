@@ -138,7 +138,7 @@ public class FetchingEmailUtil {
 
 		// check if the content is plain text
 		if (p.isMimeType("text/plain")) {
-			System.out.println("This is plain text");
+//			System.out.println("邮件正文");
 			// 设置文本内容的正文
 			emailInfo.setContent(MimeUtility.decodeText(p.getContent()
 					.toString()));
@@ -154,8 +154,8 @@ public class FetchingEmailUtil {
 		}
 		// check if the content is a nested message // 包含内嵌的内容
 		else if (p.isMimeType("message/rfc822")) {
-			System.out.println("This is a Nested Message");
-			System.out.println("---------------------------");
+//			System.out.println("This is a Nested Message");
+//			System.out.println("---------------------------");
 			writePart((Part) p.getContent(), emailInfo);
 		}
 		// check if the content is an inline image
@@ -218,9 +218,7 @@ public class FetchingEmailUtil {
 				}
 
 			} else {
-				System.out.println("This is an unknown type");
-				System.out.println("---------------------------");
-				System.out.println(o.toString());
+				System.out.println("未知类型:"+o.toString());
 			}
 		}
 
