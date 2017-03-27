@@ -23,8 +23,11 @@ public class UserService {
 
 		List<EmailAccount> rs = new ArrayList<EmailAccount>(0);
 
+		/**
+		 * 读取自定义配置，同工程路径
+		 */
 		Properties properties = PropertyConfig.getInstance()
-				.getConfig("../../../../account.properties",
+				.getConfig("D:\\my\\github\\myFork\\account.properties",
 						"/account.properties", "账号信息");
 		try {
 

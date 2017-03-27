@@ -45,7 +45,7 @@ public class EmailServerService {
 		 * 读取配置文件
 		 */
 		Properties properties = PropertyConfig.getInstance().getConfig(
-				"../../../../mailServerConfig.properties",
+				"D:\\my\\github\\myFork\\mailServerConfig.properties",
 				"/mailServerConfig.properties", "邮箱配置");
 		try {
 			String mailServer_POP3Host = properties
