@@ -109,7 +109,7 @@ public class EmailServerService {
 	 * @param emailServerInfo
 	 * @return
 	 */
-	public Session loginEmailServer(EmailServerInfo emailServerInfo,
+	public Session loginEmailServer(final EmailServerInfo emailServerInfo,
 			boolean useReadProtocol) {
 		Session sendMailSession = null;
 		Authenticator authentication = null;
