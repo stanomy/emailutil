@@ -138,7 +138,7 @@ public class FetchingEmailUtil {
 
 		// check if the content is plain text
 		if (p.isMimeType("text/plain")) {
-//			System.out.println("邮件正文");
+			// System.out.println("邮件正文");
 			// 设置文本内容的正文
 			emailInfo.setContent(MimeUtility.decodeText(p.getContent()
 					.toString()));
@@ -154,8 +154,8 @@ public class FetchingEmailUtil {
 		}
 		// check if the content is a nested message // 包含内嵌的内容
 		else if (p.isMimeType("message/rfc822")) {
-//			System.out.println("This is a Nested Message");
-//			System.out.println("---------------------------");
+			// System.out.println("This is a Nested Message");
+			// System.out.println("---------------------------");
 			writePart((Part) p.getContent(), emailInfo);
 		}
 		// check if the content is an inline image
@@ -205,8 +205,9 @@ public class FetchingEmailUtil {
 							.getAttachmentFiles();
 
 					String downloadPath = this.serverInfo.getDownloadPath()
-							+ "\\" + this.serverInfo.getUserName() + "\\";
-					
+							+ File.separator + this.serverInfo.getUserName()
+							+ File.separator;
+
 					// 下载附件
 					attachmentFiles.add(downloadPath + attachmentFileName);
 
@@ -218,13 +219,11 @@ public class FetchingEmailUtil {
 				}
 
 			} else {
-				System.out.println("未知类型:"+o.toString());
+				System.out.println("未知类型:" + o.toString());
 			}
 		}
 
 	}
-
-	
 
 	/*
 	 * This method would print FROM,TO and SUBJECT of the message
@@ -371,14 +370,14 @@ public class FetchingEmailUtil {
 				file.mkdir();
 			}
 		}
-		
+
 		@Override
 		public void run() {
 			FileOutputStream out = null;
 			try {
 				// 判断下载文件夹是否存在
 				this.createUserDownloadFolder(path);
-				out = new FileOutputStream(path + filename);
+				out = new FileOutputStream(path + File.separator + filename);
 				byte[] buffer = new byte[1024];
 				int len = 0;
 				while ((len = fileIn.read(buffer)) != -1) {

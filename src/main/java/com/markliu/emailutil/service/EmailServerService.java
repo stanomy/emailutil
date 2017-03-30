@@ -45,7 +45,7 @@ public class EmailServerService {
 		 * 读取配置文件
 		 */
 		Properties properties = PropertyConfig.getInstance().getConfig(
-				"D:\\my\\github\\myFork\\mailServerConfig.properties",
+				"CLASSPATH:mailServerConfig.properties",
 				"/mailServerConfig.properties", "邮箱配置");
 		try {
 			String mailServer_POP3Host = properties
@@ -53,8 +53,8 @@ public class EmailServerService {
 			String mailServer_SMTPHost = properties
 					.getProperty("mailServer_SMTPHost");
 			String myEmailAddress = properties.getProperty("myEmailAddress");
-			String userName = properties.getProperty("userName");
-			String password = properties.getProperty("password");
+			//String userName = properties.getProperty("userName");
+			//String password = properties.getProperty("password");
 			String validate = properties.getProperty("validate");
 			String downloadPath = properties.getProperty("downloadPath");
 			String mailSubjectPrefix = properties
@@ -72,12 +72,12 @@ public class EmailServerService {
 				emailServerInfo.setMailServerSMTPHost(mailServer_SMTPHost
 						.trim());
 			}
-			if (userName != null && !("".equals(userName.trim()))) {
-				emailServerInfo.setUserName(userName.trim());
-			}
-			if (password != null && !("".equals(password.trim()))) {
-				emailServerInfo.setPassword(password.trim());
-			}
+//			if (userName != null && !("".equals(userName.trim()))) {
+//				emailServerInfo.setUserName(userName.trim());
+//			}
+//			if (password != null && !("".equals(password.trim()))) {
+//				emailServerInfo.setPassword(password.trim());
+//			}
 			if (myEmailAddress != null && !("".equals(myEmailAddress.trim()))) {
 				emailServerInfo.setMyEmailAddress(myEmailAddress.trim());
 			}

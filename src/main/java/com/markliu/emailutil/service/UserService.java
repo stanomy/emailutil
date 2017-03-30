@@ -27,7 +27,7 @@ public class UserService {
 		 * 读取自定义配置，同工程路径
 		 */
 		Properties properties = PropertyConfig.getInstance()
-				.getConfig("D:\\my\\github\\myFork\\account.properties",
+				.getConfig("CLASSPATH:account.properties",
 						"/account.properties", "账号信息");
 		try {
 

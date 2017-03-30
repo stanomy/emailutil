@@ -11,16 +11,16 @@ public class EmailAccount {
 	 * 邮箱地址
 	 * eg:xxxx@163.com
 	 */
-	private String mailAddress;
+	protected String mailAddress;
 	/**
 	 * 邮箱密码
 	 */
-	private String mailPwd;
+	protected String mailPwd;
 	/**
 	 * 邮箱服务名称，截取邮箱地址后缀
 	 * eg:@163.com
 	 */
-	private String serverName;
+	protected String serverName;
 	
 	
 	
