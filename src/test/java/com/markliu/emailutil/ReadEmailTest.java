@@ -79,7 +79,7 @@ public class ReadEmailTest {
 			emailServerInfo.setMyEmailAddress(ac.getMailAddress());
 			List<EmailInfo> emailInfos = EmailTemplateUtil
 					.getEmailBySubjectPrefix(emailServerInfo);
-			System.out.println("邮件数目：" + emailInfos.size());
+			System.out.println("邮件数目：" + (null!=emailInfos?emailInfos.size():"0"));
 			for (EmailInfo emailInfo : emailInfos) {
 				System.out.println(emailInfo.toString());
 			}

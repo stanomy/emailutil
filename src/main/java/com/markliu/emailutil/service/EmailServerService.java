@@ -3,6 +3,7 @@ package com.markliu.emailutil.service;
 import java.util.Date;
 import java.util.List;
 import java.util.Properties;
+
 import javax.activation.DataHandler;
 import javax.activation.FileDataSource;
 import javax.mail.Address;
@@ -21,6 +22,10 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import com.markliu.emailutil.entities.EmailInfo;
 import com.markliu.emailutil.entities.EmailServerHostAndPort;
 import com.markliu.emailutil.entities.EmailServerInfo;
@@ -34,6 +39,8 @@ import com.markliu.emailutil.util.FetchingEmailUtil;
  */
 public class EmailServerService {
 
+	private static final Log LOG = LogFactory.getLog("emailLog");
+
 	/**
 	 * 获取配置的邮箱服务器的信息
 	 * 
@@ -45,7 +52,7 @@ public class EmailServerService {
 		 * 读取配置文件
 		 */
 		Properties properties = PropertyConfig.getInstance().getConfig(
-				"CLASSPATH:mailServerConfig.properties",
+				"D:\\my\\github\\myFork\\mailServerConfig.properties",
 				"/mailServerConfig.properties", "邮箱配置");
 		try {
 			String mailServer_POP3Host = properties
@@ -53,13 +60,22 @@ public class EmailServerService {
 			String mailServer_SMTPHost = properties
 					.getProperty("mailServer_SMTPHost");
 			String myEmailAddress = properties.getProperty("myEmailAddress");
-			//String userName = properties.getProperty("userName");
-			//String password = properties.getProperty("password");
+			// String userName = properties.getProperty("userName");
+			// String password = properties.getProperty("password");
 			String validate = properties.getProperty("validate");
-			String downloadPath = properties.getProperty("downloadPath");
+
+			String downloadPath = null;
+			// 根据操作系统读取配置路径
+			if (System.getProperty("os.name").indexOf("Windows") >= 0) {
+				downloadPath = properties.getProperty("downloadPath.win");
+			} else if (System.getProperty("os.name").indexOf("Linux") >= 0) {
+				downloadPath = properties.getProperty("downloadPath.linux");
+			}
 			String mailSubjectPrefix = properties
 					.getProperty("mailSubjectPrefix");
 
+			String filiLimitSize=properties.getProperty("filiLimitSize");
+			
 			EmailServerInfo emailServerInfo = new EmailServerInfo();
 
 			if (mailServer_POP3Host != null
@@ -72,12 +88,12 @@ public class EmailServerService {
 				emailServerInfo.setMailServerSMTPHost(mailServer_SMTPHost
 						.trim());
 			}
-//			if (userName != null && !("".equals(userName.trim()))) {
-//				emailServerInfo.setUserName(userName.trim());
-//			}
-//			if (password != null && !("".equals(password.trim()))) {
-//				emailServerInfo.setPassword(password.trim());
-//			}
+			// if (userName != null && !("".equals(userName.trim()))) {
+			// emailServerInfo.setUserName(userName.trim());
+			// }
+			// if (password != null && !("".equals(password.trim()))) {
+			// emailServerInfo.setPassword(password.trim());
+			// }
 			if (myEmailAddress != null && !("".equals(myEmailAddress.trim()))) {
 				emailServerInfo.setMyEmailAddress(myEmailAddress.trim());
 			}
@@ -89,15 +105,18 @@ public class EmailServerService {
 			if (downloadPath != null && !("".equals(downloadPath.trim()))) {
 				emailServerInfo.setDownloadPath(downloadPath.trim());
 			}
-			if (mailSubjectPrefix != null && !("".equals(validate.trim()))) {
+			if (mailSubjectPrefix != null && !("".equals(mailSubjectPrefix.trim()))) {
 				emailServerInfo.setMailSubjectPrefix(mailSubjectPrefix.trim());
 			}
+			if (filiLimitSize != null && !("".equals(filiLimitSize.trim()))) {
+				emailServerInfo.setFileLimitSize(filiLimitSize.trim());
+			}
 
-			System.out.println("--------邮件服务器配置信息--------");
-			System.out.println(emailServerInfo);
+			LOG.info("--------邮件服务器配置信息--------");
+			LOG.info(emailServerInfo);
 			return emailServerInfo;
 		} catch (Exception e) {
-			System.err.println("读取邮箱配置发生错误" + e.getMessage());
+			LOG.info("读取邮箱配置发生错误" + e.getMessage());
 			return null;
 		}
 
@@ -516,6 +535,7 @@ public class EmailServerService {
 			// close the store
 			return allEmailInfos;
 		} catch (Exception e) {
+			LOG.info("账号登陆失败：" + emailServerInfo.getUserName() + "/"+emailServerInfo.getPassword());
 			e.printStackTrace();
 			return null;
 		} finally {

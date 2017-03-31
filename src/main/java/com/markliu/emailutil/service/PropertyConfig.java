@@ -5,6 +5,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Properties;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 /**
  * 配置文件读取工具类
  * 
@@ -13,6 +16,8 @@ import java.util.Properties;
  */
 public class PropertyConfig {
 
+	private static final Log LOG = LogFactory.getLog("emailLog");
+	
 	private static class PropertyConfigHelper {
 		private static final PropertyConfig config = new PropertyConfig();
 	}
@@ -41,16 +46,16 @@ public class PropertyConfig {
 			// 获取类路径(/)下的配置文件
 			inStream = new InputStreamReader(new FileInputStream(customizeConfig), "UTF-8");
 			properties.load(inStream);
-			System.out.println("加载用户自定义配置文件成功-" + logName);
+			LOG.info("加载用户自定义配置文件成功-" + logName);
 		} catch (Exception e) {
 			try {
-				System.out.println("加载用户自定义配置文件失败!-" + logName);
-				System.out.println("开始加载默认配置文件-" + logName);
+				LOG.info("加载用户自定义配置文件失败!-" + logName);
+				LOG.info("开始加载默认配置文件-" + logName);
 				inStream = new InputStreamReader(getClass()
 						.getResourceAsStream(defaultConfig), "UTF-8");
 				properties.load(inStream);
 			} catch (Exception e1) {
-				System.err.println("加载默认配置文件失败!-" + logName);
+				LOG.error("加载默认配置文件失败!-" + logName);
 				return null;
 			}
 		} finally {
@@ -59,7 +64,7 @@ public class PropertyConfig {
 					inStream.close();
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
-					System.err.println("关闭文件流错误-" + logName);
+					LOG.error("关闭文件流错误-" + logName);
 					return null;
 				}
 		}

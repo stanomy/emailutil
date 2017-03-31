@@ -43,6 +43,11 @@ public class EmailServerInfo {
 	 */
 	private String mailSubjectPrefix;
 
+	/**
+	 * 附件大小限制
+	 */
+	private String fileLimitSize;
+
 	public String getMailServerPOP3Host() {
 		return mailServerPOP3Host;
 	}
@@ -115,6 +120,14 @@ public class EmailServerInfo {
 		this.mailSubjectPrefix = mailSubjectPrefix;
 	}
 
+	public String getFileLimitSize() {
+		return fileLimitSize;
+	}
+
+	public void setFileLimitSize(String fileLimitSize) {
+		this.fileLimitSize = fileLimitSize;
+	}
+
 	@Override
 	public String toString() {
 		return super.toString() + "{\nmailServerPOP3Host=" + mailServerPOP3Host
@@ -122,7 +135,8 @@ public class EmailServerInfo {
 				+ "\nmyEmailAddress=" + myEmailAddress + "\nuserName="
 				+ userName + "\nvalidate=" + validate + "\nssl=" + ssl
 				+ "\ndownloadPath=" + downloadPath + "\nmailSubjectPrefix="
-				+ mailSubjectPrefix + "\n}";
+				+ mailSubjectPrefix + "\nfileLimitSize=" + fileLimitSize
+				+ "\n}";
 	}
 
 }

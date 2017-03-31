@@ -21,6 +21,9 @@ import javax.mail.internet.AddressException;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeUtility;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import com.markliu.emailutil.entities.EmailInfo;
 import com.markliu.emailutil.entities.EmailServerInfo;
 
@@ -31,6 +34,8 @@ import com.markliu.emailutil.entities.EmailServerInfo;
  * @time Apr 13, 2016 2:36:05 PM
  */
 public class FetchingEmailUtil {
+
+	private static final Log LOG = LogFactory.getLog("emailLog");
 
 	private EmailServerInfo serverInfo = null;
 
@@ -133,8 +138,8 @@ public class FetchingEmailUtil {
 		if (p instanceof Message)
 			// Call methos writeEnvelope
 			writeEnvelope((Message) p, emailInfo);
-		System.out.println("-------------Body---------------");
-		System.out.println("CONTENT-TYPE: " + p.getContentType());
+		LOG.info("-------------Body---------------");
+		LOG.info("CONTENT-TYPE: " + p.getContentType());
 
 		// check if the content is plain text
 		if (p.isMimeType("text/plain")) {
@@ -146,7 +151,7 @@ public class FetchingEmailUtil {
 		// check if the content has attachment
 		else if (p.isMimeType("multipart/*")) {
 			emailInfo.setContainsAttachments(true);
-			System.out.println("--------------包含附件-------------");
+			LOG.info("--------------包含附件-------------");
 			Multipart mp = (Multipart) p.getContent();
 			int count = mp.getCount();
 			for (int i = 0; i < count; i++)
@@ -163,14 +168,14 @@ public class FetchingEmailUtil {
 			Object o = p.getContent();
 			InputStream x = (InputStream) o;
 			// Construct the required byte array
-			System.out.println("x.length = " + x.available());
+			LOG.info("x.length = " + x.available());
 
 			// 开启线程保存文件
 			new SaveFileThread(x, "image.jpg",
 					this.serverInfo.getDownloadPath()).start();
 
 		} else if (p.getContentType().contains("image/")) {
-			System.out.println("content type" + p.getContentType());
+			LOG.info("content type" + p.getContentType());
 			File f = new File(this.serverInfo.getDownloadPath() + "image"
 					+ new Date().getTime() + ".jpg");
 			DataOutputStream output = new DataOutputStream(
@@ -191,7 +196,7 @@ public class FetchingEmailUtil {
 				emailInfo.setContent(MimeUtility.decodeText(p.getContent()
 						.toString()));
 			} else if (o instanceof InputStream) {
-				System.out.println("-------开始下载附件-------");
+				
 
 				String attachmentFileName = p.getDataHandler().getDataSource()
 						.getName();
@@ -201,6 +206,16 @@ public class FetchingEmailUtil {
 					// System.out.println("附件文件名：" + attachmentFileName);
 					InputStream fileIn = p.getDataHandler().getDataSource()
 							.getInputStream();
+					// 附件大小限制
+					LOG.info("附件大小" + fileIn.available());
+					if (fileIn.available() > 1024 * 1024 * Integer
+							.valueOf(this.serverInfo.getFileLimitSize())) {
+						LOG.info("附件大小超过最大限制:"
+								+ this.serverInfo.getFileLimitSize() + "m");
+						return;
+					}
+					
+					LOG.info("-------开始下载附件-------");
 					List<String> attachmentFiles = emailInfo
 							.getAttachmentFiles();
 
@@ -219,7 +234,7 @@ public class FetchingEmailUtil {
 				}
 
 			} else {
-				System.out.println("未知类型:" + o.toString());
+				LOG.info("未知类型:" + o.toString());
 			}
 		}
 
@@ -230,7 +245,7 @@ public class FetchingEmailUtil {
 	 */
 	private static void writeEnvelope(Message m, EmailInfo emailInfo)
 			throws Exception {
-		System.out.println("------------HEADER---------------");
+		LOG.info("------------HEADER---------------");
 		Address[] a;
 
 		// 设置发送时间
@@ -239,8 +254,7 @@ public class FetchingEmailUtil {
 		// FROM
 		if ((a = m.getFrom()) != null) {
 			// 注意需要 decode
-			System.out.println("From address: "
-					+ MimeUtility.decodeText(a[0].toString()));
+			LOG.info("From address: " + MimeUtility.decodeText(a[0].toString()));
 			emailInfo.setFromAddress(MimeUtility.decodeText(a[0].toString()));
 		}
 
@@ -248,14 +262,13 @@ public class FetchingEmailUtil {
 		try {
 			a = m.getRecipients(Message.RecipientType.TO);
 		} catch (AddressException e) {
-			System.out
-					.println("*********** TO Illegal semicolon *************");
-			System.out.println(e.getMessage());
+			LOG.info("*********** TO Illegal semicolon *************");
+			LOG.info(e.getMessage());
 		}
 		if (a != null) {
 			String[] toes = new String[a.length];
 			for (int j = 0; j < a.length; j++) {
-				System.out.println("TO address: "
+				LOG.info("TO address: "
 						+ MimeUtility.decodeText(a[j].toString()));
 				toes[j] = MimeUtility.decodeText(a[j].toString());
 			}
@@ -266,15 +279,13 @@ public class FetchingEmailUtil {
 		try {
 			a = m.getRecipients(Message.RecipientType.CC);
 		} catch (Exception e) {
-			System.out
-					.println("*********** CC Illegal semicolon *************");
-			System.out.println(e.getMessage());
+			LOG.info("*********** CC Illegal semicolon *************");
+			LOG.info(e.getMessage());
 		}
 		if (a != null) {
 			String[] toes = new String[a.length];
 			for (int j = 0; j < a.length; j++) {
-				System.out.println("TO CC: "
-						+ MimeUtility.decodeText(a[j].toString()));
+				LOG.info("TO CC: " + MimeUtility.decodeText(a[j].toString()));
 				toes[j] = MimeUtility.decodeText(a[j].toString());
 			}
 			emailInfo.setCarbonCopy(toes);
@@ -284,15 +295,13 @@ public class FetchingEmailUtil {
 		try {
 			a = m.getRecipients(Message.RecipientType.BCC);
 		} catch (Exception e) {
-			System.out
-					.println("*********** BCC Illegal semicolon *************");
-			System.out.println(e.getMessage());
+			LOG.info("*********** BCC Illegal semicolon *************");
+			LOG.info(e.getMessage());
 		}
 		if (a != null) {
 			String[] toes = new String[a.length];
 			for (int j = 0; j < a.length; j++) {
-				System.out.println("TO BCC: "
-						+ MimeUtility.decodeText(a[j].toString()));
+				LOG.info("TO BCC: " + MimeUtility.decodeText(a[j].toString()));
 				toes[j] = MimeUtility.decodeText(a[j].toString());
 			}
 			emailInfo.setDarkCopy(toes);
@@ -300,8 +309,7 @@ public class FetchingEmailUtil {
 
 		// SUBJECT
 		if (m.getSubject() != null) {
-			System.out.println("SUBJECT: "
-					+ MimeUtility.decodeText(m.getSubject()));
+			LOG.info("SUBJECT: " + MimeUtility.decodeText(m.getSubject()));
 			emailInfo.setSubject(MimeUtility.decodeText(m.getSubject()));
 		}
 		// 判断邮件是否已读

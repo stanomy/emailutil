@@ -3,6 +3,10 @@ package com.markliu.emailutil.service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import com.markliu.emailutil.entities.EmailAccount;
 
 /**
@@ -14,6 +18,7 @@ import com.markliu.emailutil.entities.EmailAccount;
  */
 public class UserService {
 
+	private static final Log LOG = LogFactory.getLog("emailLog");
 	/**
 	 * 从配置文件读取账号，密码
 	 * 
@@ -27,7 +32,7 @@ public class UserService {
 		 * 读取自定义配置，同工程路径
 		 */
 		Properties properties = PropertyConfig.getInstance()
-				.getConfig("CLASSPATH:account.properties",
+				.getConfig("D:\\my\\github\\myFork\\account.properties",
 						"/account.properties", "账号信息");
 		try {
 
@@ -52,10 +57,10 @@ public class UserService {
 				} else
 					continue;
 			}
-			System.out.println("从配置文件读取了" + rs.size() + "个用户信息。");
+			LOG.info("从配置文件读取了" + rs.size() + "个用户信息。");
 			return rs;
 		} catch (Exception e) {
-			System.err.println("读取用户配置信息发生错误" + e.getMessage());
+			LOG.error("读取用户配置信息发生错误" + e.getMessage());
 			return null;
 		}
 	}

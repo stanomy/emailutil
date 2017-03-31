@@ -4,6 +4,9 @@ import java.util.List;
 
 import javax.mail.Session;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import com.markliu.emailutil.entities.EmailAccount;
 import com.markliu.emailutil.entities.EmailInfo;
 import com.markliu.emailutil.entities.EmailServerInfo;
@@ -17,6 +20,8 @@ import com.markliu.emailutil.service.UserService;
  * @time Apr 12, 2016 5:43:46 PM
  */
 public class EmailTemplateUtil {
+	
+	private static final Log LOG = LogFactory.getLog("emailLog");
 
 	private static EmailServerService emailServerService = new EmailServerService();
 
@@ -76,19 +81,19 @@ public class EmailTemplateUtil {
 		Session sendMailSession = emailServerService.loginEmailServer(
 				emailServerInfo, false);
 		if (sendMailSession != null) {
-			System.out.println(emailServerInfo.getMailServerSMTPHost()
+			LOG.info(emailServerInfo.getMailServerSMTPHost()
 					+ " 登陆成功！");
-			System.out.println("正在发送邮件...");
+			LOG.info("正在发送邮件...");
 			boolean result = emailServerService.sendEmail(sendMailSession,
 					emailServerInfo, email);
 			if (result) {
-				System.out.println("发送成功！");
+				LOG.info("发送成功！");
 			} else {
-				System.out.println("发送失败！");
+				LOG.info("发送失败！");
 			}
 			return result;
 		} else {
-			System.out.println(emailServerInfo.getMailServerSMTPHost()
+			LOG.info(emailServerInfo.getMailServerSMTPHost()
 					+ " 登陆失败！");
 			return false;
 		}
@@ -107,15 +112,15 @@ public class EmailTemplateUtil {
 		Session sendMailSession = emailServerService.loginEmailServer(
 				emailServerInfo, true);
 		if (sendMailSession != null) {
-			System.out.println(emailServerInfo.getMailServerPOP3Host()
+			LOG.info(emailServerInfo.getMailServerPOP3Host()
 					+ " 登陆成功！");
-			System.out.println("正在读取邮件...");
+			LOG.info("正在读取邮件...");
 			List<EmailInfo> emailInfos = emailServerService.readAllEmailInfos(
 					sendMailSession, emailServerInfo);
-			System.out.println("读取完毕...");
+			LOG.info("读取完毕...");
 			return emailInfos;
 		} else {
-			System.out.println(emailServerInfo.getMailServerPOP3Host()
+			LOG.info(emailServerInfo.getMailServerPOP3Host()
 					+ " 登陆失败！");
 			return null;
 		}
@@ -134,15 +139,15 @@ public class EmailTemplateUtil {
 		Session sendMailSession = emailServerService.loginEmailServer(
 				emailServerInfo, true);
 		if (sendMailSession != null) {
-			System.out.println(emailServerInfo.getMailServerPOP3Host()
+			LOG.info(emailServerInfo.getMailServerPOP3Host()
 					+ " 登陆成功！");
-			System.out.println("正在读取邮件...");
+			LOG.info("正在读取邮件...");
 			EmailInfo emailInfo = emailServerService
 					.getLatestOneEmailFromStore(sendMailSession,
 							emailServerInfo);
 			return emailInfo;
 		} else {
-			System.out.println(emailServerInfo.getMailServerPOP3Host()
+			LOG.info(emailServerInfo.getMailServerPOP3Host()
 					+ " 登陆失败！");
 			return null;
 		}
@@ -155,14 +160,14 @@ public class EmailTemplateUtil {
 		Session sendMailSession = emailServerService.loginEmailServer(
 				emailServerInfo, true);
 		if (sendMailSession != null) {
-			System.out.println(emailServerInfo.getMailServerPOP3Host()
+			LOG.info(emailServerInfo.getMailServerPOP3Host()
 					+ " 登陆成功！");
-			System.out.println("正在读取邮件...");
+			LOG.info("正在读取邮件...");
 			List<EmailInfo> emailInfos = emailServerService
 					.getEmailBySubjectPrefix(sendMailSession, emailServerInfo);
 			return emailInfos;
 		} else {
-			System.out.println(emailServerInfo.getMailServerPOP3Host()
+			LOG.info(emailServerInfo.getMailServerPOP3Host()
 					+ " 登陆失败！");
 			return null;
 		}
