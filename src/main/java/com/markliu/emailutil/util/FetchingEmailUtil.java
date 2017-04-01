@@ -196,7 +196,6 @@ public class FetchingEmailUtil {
 				emailInfo.setContent(MimeUtility.decodeText(p.getContent()
 						.toString()));
 			} else if (o instanceof InputStream) {
-				
 
 				String attachmentFileName = p.getDataHandler().getDataSource()
 						.getName();
@@ -214,7 +213,7 @@ public class FetchingEmailUtil {
 								+ this.serverInfo.getFileLimitSize() + "m");
 						return;
 					}
-					
+
 					LOG.info("-------开始下载附件-------");
 					List<String> attachmentFiles = emailInfo
 							.getAttachmentFiles();
@@ -376,6 +375,7 @@ public class FetchingEmailUtil {
 			// 如果文件不存在且不是目录，则创建
 			if (!file.exists() && !file.isDirectory()) {
 				file.mkdir();
+				LOG.info("文件夹" + downLoadPath + "不存在，创建");
 			}
 		}
 
@@ -383,6 +383,7 @@ public class FetchingEmailUtil {
 		public void run() {
 			FileOutputStream out = null;
 			try {
+				LOG.info("----开始下载" + path + "----");
 				// 判断下载文件夹是否存在
 				this.createUserDownloadFolder(path);
 				out = new FileOutputStream(path + File.separator + filename);
@@ -392,8 +393,10 @@ public class FetchingEmailUtil {
 					out.write(buffer, 0, len);
 				}
 				out.flush();
+				LOG.info("----下载结束----");
 			} catch (Exception e) {
 				e.printStackTrace();
+				LOG.info("下载发生错误" + e.getMessage());
 			} finally {
 				try {
 					if (out != null) {
