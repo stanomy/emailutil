@@ -374,7 +374,7 @@ public class FetchingEmailUtil {
 			File file = new File(downLoadPath);
 			// 如果文件不存在且不是目录，则创建
 			if (!file.exists() && !file.isDirectory()) {
-				file.mkdir();
+				file.mkdirs();//包括父目录
 				LOG.info("文件夹" + downLoadPath + "不存在，创建");
 			}
 		}
